@@ -1,35 +1,24 @@
 <script>
   import TextPressure from './TextPressure.svelte';
-  
-  /**
-   * @type {{ update: (arg0: (val: any) => boolean) => void; }}
-   */
-   export let isPlaying;
-  
+  export let isPlaying;
+
   let showPlayButton = true;
   let showPlayer = false;
-  let spotifyKey = 0; // Para forzar recreación del iframe
+  let spotifyKey = 0;
 
   function togglePlay() {
     isPlaying.update(val => !val);
     showPlayer = !showPlayer;
-    
-    if (!showPlayer) {
-      showPlayer = false;
-    } else {
-      spotifyKey++;
-    }
+    if (showPlayer) spotifyKey++;
   }
 
-  // Reacciona a cambios en isPlaying
   $: if ($isPlaying) {
     showPlayer = true;
-    spotifyKey++; // Forzar recreación del iframe
+    spotifyKey++;
   } else {
     showPlayer = false;
   }
 
-  // Función para scroll suave hacia arriba
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -50,27 +39,25 @@
     <div class="center">
       {#if showPlayer}
         {#key spotifyKey}
-        <div class="spotify-player">
-          <iframe 
-            style="border-radius:12px" 
-            src="https://open.spotify.com/embed/playlist/2pFMiJvbP91UIO31eYRTLS?utm_source=generator&autoplay=1" 
-            width="100%" 
-            height="152" 
-            frameBorder="0" 
-            allowfullscreen="" 
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-            title="Spotify Player">
-          </iframe>
-        </div>
+          <div class="spotify-player">
+            <iframe
+              style="border-radius:12px"
+              src="https://open.spotify.com/embed/playlist/2pFMiJvbP91UIO31eYRTLS?utm_source=generator&autoplay=1"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              title="Spotify Player">
+            </iframe>
+          </div>
         {/key}
       {:else if showPlayButton}
         <button 
-          class="play-button" 
+          class="play-button"
           on:click={togglePlay} 
           class:playing={$isPlaying}
-          title={$isPlaying ? 'Pausar música' : 'Reproducir música'}
         >
-          <svg viewBox="0 0 100 100" fill="currentColor">
+          <svg viewBox="0 0 100 100">
             {#if $isPlaying}
               <rect x="25" y="20" width="15" height="60" />
               <rect x="60" y="20" width="15" height="60" />
@@ -83,208 +70,252 @@
     </div>
   </div>
 
-  <!-- Flecha fija para volver arriba -->
-  <button class="back-to-top" on:click={scrollToTop} title="Volver arriba">↑</button>
+  <button class="back-to-top" on:click={scrollToTop}>↑</button>
 </section>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Audiowide&family=Rajdhani:wght@400;500;600;700&display=swap');
-
   :root {
-    --color-red: #dd0e0e;
-    --color-red-light: #FF7070;
-    --color-pink: #E89A9E;
-    --color-brown: #3D2726;
-    --color-gray: #808080;
-    --color-white: #FFFFFF;
-    --font-family-display: 'Audiowide', 'Orbitron', sans-serif;
+    --red: #dd0e0e;
+    --white: #fff;
+    --font-display: 'Audiowide', 'Orbitron', sans-serif;
   }
 
   .hero {
     position: relative;
-    width: 100vw;
-    height: 110vh;
+    width: 100%;
+    height: 100svh;
     overflow: hidden;
-    margin: -8px;
-    padding: 0;
   }
 
   .hero-background {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     z-index: 1;
   }
 
-.background-image {
+  .background-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    margin-top: 100px;
-    filter: brightness(0.3); 
-}
+    filter: brightness(0.3);
+  }
 
   .overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: linear-gradient(
       135deg,
-      rgba(255, 51, 51, 0.3) 0%,
-      rgba(77, 77, 77, 0.4) 10%,
-      rgba(61, 39, 38, 0.3) 50%
+      rgba(255, 51, 51, 0.3),
+      rgba(77, 77, 77, 0.4),
+      rgba(61, 39, 38, 0.3)
     );
     z-index: 2;
   }
 
   .hero-content {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+    z-index: 3;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 3;
+    padding: 1rem;
+    text-align: center;
   }
 
   .hero-text {
+    margin-bottom: 1rem;
+    margin-top: 3rem;
+    width: 100%;
     text-align: center;
-    margin-bottom: 40px;
-    animation: fadeInDown 1s ease-out;
-    margin-top: 150px;
+  }
+
+  .hero-text :global(.text-pressure) {
+    display: inline-block;
+    max-width: 100%;
   }
 
   .subtitle {
-    font-family: var(--font-family-display);
+    font-family: var(--font-display);
     font-size: clamp(32px, 8vw, 80px);
-    font-weight: 400;
-    color: var(--color-red);
-    margin: 20px 0 0 0;
-    padding: 0;
-    text-shadow: 0 0 20px rgba(255, 51, 51, 0.9),
-                 0 0 40px rgba(255, 51, 51, 0.6);
-    letter-spacing: 2px;
-    font-style: italic;
+    color: var(--red);
+    text-shadow: 0 0 20px rgba(255, 51, 51, 0.9);
   }
 
   .play-button {
-    width: 100px;
-    height: 100px;
+    width: clamp(70px, 15vw, 110px);
+    height: clamp(70px, 15vw, 110px);
     border-radius: 50%;
-    border: 3px solid var(--color-red);
+    border: 3px solid var(--red);
     background: transparent;
-    color: red;
-    display: flex;
-    align-items: center;
-    justify-content: left;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 40px;
-    position: relative;
-    z-index: 4;
-    animation: fadeInUp 1s ease-out 0.2s both;
-  }
-
-  .play-button:hover {
-    box-shadow: 0 0 30px rgba(255, 51, 51, 0.8),
-                inset 0 0 30px rgba(255, 51, 51, 0.4);
-    transform: scale(1.1);
-  }
-
-  .play-button:active {
-    transform: scale(0.95);
-  }
-
-.play-button svg {
-    width: 50px;
-    height: 50px;
-    stroke: red; 
-    stroke-width: 3px;
-    fill: none;
-    margin-left: 18px;
-    filter: drop-shadow(0 0 8px #ff6666); 
-}
-
-  .play-button.playing {
-    animation: pulsing 1s ease-in-out infinite;
-  }
-
-  .spotify-player {
-    padding: 1px;
-    border-radius: 15px;
-    outline: 1px solid black;
-    max-width:25rem;
-    pointer-events: auto;
-    animation: fadeInUp 0.5s ease-out;
-  }
-
-  /* Flecha back-to-top */
-  .back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: var(--color-red);
-    color: var(--color-white);
-    font-size: 1.6rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    transition: .3s;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
-    z-index: 10;
-    box-shadow: 0px 0px 30px var(--color-red);
+  }
+
+  .play-button svg {
+    width: 60%;
+    height: 60%;
+    fill: var(--red);
+  }
+
+  .spotify-player {
+    width: min(90vw, 420px);
+    aspect-ratio: 2.6 / 1;
+    position: relative;
+  }
+
+  .spotify-player iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--red);
+    color: var(--white);
+    font-size: 1.8rem;
+    border: none;
+    box-shadow: 0 0 15px var(--red);
     cursor: pointer;
-    transition: all 0.3s ease;
+    z-index: 10;
   }
 
-  .back-to-top:hover {
-    background-color: var(--color-red-light);
-    transform: translateY(-5px);
-  }
-
-  @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes pulsing {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(255, 51, 51, 0.5),
-                  inset 0 0 20px rgba(255, 51, 51, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(255, 51, 51, 0.8),
-                  inset 0 0 40px rgba(255, 51, 51, 0.4);
+  /* TABLETS */
+  @media (max-width: 1024px) {
+    .hero-text {
+      margin-top: 2rem;
     }
   }
 
-  @media (max-width: 768px) {
+  /* MOBILE NORMAL */
+  @media (max-width: 600px) {
+    .hero-text {
+      margin-top: 1rem;
+    }
+
+    .back-to-top {
+      width: 42px;
+      height: 42px;
+      font-size: 1.4rem;
+      bottom: 1.5rem;
+      right: 1.5rem;
+    }
+  }
+
+  /* MOBILE S — Pantallas muy pequeñas (<= 360px) */
+  @media (max-width: 360px) {
+    .hero {
+      height: 100dvh; 
+    }
+
+    .hero-text {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-text :global(.text-pressure) {
+      transform: scale(0.85);
+      transform-origin: center;
+    }
+
     .subtitle {
-      font-size: clamp(24px, 6vw, 40px);
+      font-size: clamp(18px, 7vw, 26px);
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
     }
-    .play-button { width: 80px; height: 80px; }
-    .play-button svg { width: 40px; height: 40px; }
-    .spotify-player { bottom: 10px; padding: 10px; }
+
+    .play-button {
+      width: 65px;
+      height: 65px;
+      border-width: 2px;
+    }
+
+    .play-button svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .spotify-player {
+      width: 92vw;
+      min-height: 110px;
+      aspect-ratio: unset;
+    }
+
+    .back-to-top {
+      width: 38px;
+      height: 38px;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 1.2rem;
+    }
   }
 
-  @media (max-width: 480px) {
-    .subtitle { font-size: clamp(18px, 5vw, 28px); }
-    .play-button { width: 60px; height: 60px; margin-bottom: 20px; }
-    .play-button svg { width: 30px; height: 30px; }
-    .hero-text { margin-bottom: 20px; }
+  /* Pantallas 320px - Extra pequeñas */
+  @media (max-width: 320px) {
+    .hero {
+      height: auto;
+      min-height: 100dvh;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
+      overflow-x: hidden;
+    }
+
+    .hero-content {
+      padding: 0.5rem 0.25rem 1rem;
+      justify-content: flex-start;
+    }
+
+    .hero-text {
+      margin-top: 20rem;
+      padding: 0 0.25rem;
+      line-height: 1.05;
+    }
+
+    .hero-text :global(.text-pressure) {
+      transform: scale(0.68);
+      transform-origin: center;
+    }
+
+    .subtitle {
+      font-size: clamp(15px, 5vw, 20px);
+      line-height: 1.1;
+      letter-spacing: 0.2px;
+      padding: 0 0.5rem;
+    }
+
+    .play-button {
+      width: 56px;
+      height: 56px;
+      border-width: 2px;
+    }
+
+    .play-button svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .spotify-player {
+      width: 95vw;
+      min-height: 105px;
+    }
+
+    .back-to-top {
+      width: 34px;
+      height: 34px;
+      bottom: 0.8rem;
+      right: 0.8rem;
+      font-size: 1.1rem;
+    }
   }
 </style>
