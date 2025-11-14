@@ -6,6 +6,7 @@
    export let isPlaying;
 
   let activeLink = 'hogar';
+  let menuOpen = false;
 
   // IDs corregidos para coincidir con las secciones
   const leftLinks = [
@@ -21,6 +22,9 @@
     { id: 'contacto', label: 'Contacto' },
   ];
 
+  // Combinar todos los links para el menú móvil
+  const allLinks = [...leftLinks, ...rightLinks];
+
   /**
    * @param {string} id
    * @param {Event} event
@@ -28,6 +32,7 @@
   function handleClick(id, event) {
     event.preventDefault();
     activeLink = id;
+    menuOpen = false; // Cerrar menú en móvil después de hacer clic
     smoothScrollTo(id);
   }
 
@@ -50,14 +55,31 @@
   // Función para ir al inicio cuando se hace clic en el logo
   function handleLogoClick() {
     activeLink = 'hogar';
+    menuOpen = false;
     smoothScrollTo('hogar');
+  }
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
   }
 </script>
 
 <nav class="navbar">
   <div class="navbar-wrapper">
-    <!-- Links izquierda -->
-    <ul class="nav-links nav-left">
+    <!-- Hamburger Menu Button (solo visible en móvil) -->
+    <button 
+      class="hamburger" 
+      class:open={menuOpen}
+      on:click={toggleMenu}
+      aria-label="Toggle menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Links izquierda (desktop) -->
+    <ul class="nav-links nav-left desktop-only">
       {#each leftLinks as link (link.id)}
         <li>
           <a
@@ -100,9 +122,29 @@
       </button>
     </div>
 
-    <!-- Links derecha -->
-    <ul class="nav-links nav-right">
+    <!-- Links derecha (desktop) -->
+    <ul class="nav-links nav-right desktop-only">
       {#each rightLinks as link (link.id)}
+        <li>
+          <a
+            href="#{link.id}"
+            class={activeLink === link.id ? 'active' : ''}
+            on:click={(e) => handleClick(link.id, e)}
+          >
+            {link.label}
+          </a>
+        </li>
+      {/each}
+    </ul>
+
+    <!-- Placeholder para mantener simetría -->
+    <div class="hamburger-placeholder"></div>
+  </div>
+
+  <!-- Menú móvil desplegable -->
+  <div class="mobile-menu" class:open={menuOpen}>
+    <ul class="mobile-nav-links">
+      {#each allLinks as link (link.id)}
         <li>
           <a
             href="#{link.id}"
@@ -116,6 +158,11 @@
     </ul>
   </div>
 </nav>
+
+<!-- Overlay para cerrar el menú al hacer clic fuera -->
+{#if menuOpen}
+  <div class="overlay" on:click={toggleMenu}></div>
+{/if}
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Audiowide&family=Rajdhani:wght@400;500;600;700&display=swap');
@@ -319,6 +366,113 @@
     animation: pulse-icon 1.5s ease-in-out infinite;
   }
 
+  /* Hamburger Menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+  }
+
+  .hamburger span {
+    width: 100%;
+    height: 3px;
+    background: var(--color-red);
+    border-radius: 2px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  .hamburger-placeholder {
+    display: none;
+    width: 30px;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: fixed;
+    top: 100px;
+    left: -100%;
+    width: 280px;
+    height: calc(100vh - 100px);
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
+    border-right: 2px solid var(--color-red);
+    box-shadow: 5px 0 30px rgba(255, 51, 51, 0.4);
+    transition: left var(--transition-normal);
+    overflow-y: auto;
+    z-index: 999;
+  }
+
+  .mobile-menu.open {
+    left: 0;
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+  }
+
+  .mobile-nav-links li {
+    margin: 0;
+  }
+
+  .mobile-nav-links a {
+    display: block;
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+  }
+
+  .mobile-nav-links a:hover {
+    background-color: rgba(255, 51, 51, 0.2);
+    transform: translateX(5px);
+  }
+
+  .mobile-nav-links a.active::before {
+    display: none;
+  }
+
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 998;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   @keyframes neon-pulse {
     0%, 100% {
       box-shadow: 0 0 20px rgba(255, 51, 51, 0.8),
@@ -351,18 +505,44 @@
     }
   }
 
-  @media (max-width: 768px) {
-    .navbar {
-      height: 80px;
-    }
-    
+  .desktop-only {
+    display: flex;
+  }
+
+  @media (max-width: 1024px) {
     a {
-      font-size: 16px;
-      padding: 6px 10px;
+      font-size: 18px;
+      padding: 8px 12px;
     }
 
     .logo-container {
-      margin: 0 20px;
+      margin: 0 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      height: 70px;
+    }
+
+    .navbar-wrapper {
+      padding: 0 15px;
+    }
+
+    .desktop-only {
+      display: none !important;
+    }
+
+    .hamburger,
+    .hamburger-placeholder {
+      display: flex;
+    }
+
+    .logo-container {
+      margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .logo {
@@ -373,20 +553,16 @@
       width: 30px;
       height: 30px;
     }
+
+    .mobile-menu {
+      top: 70px;
+      height: calc(100vh - 70px);
+    }
   }
 
   @media (max-width: 480px) {
     .navbar {
-      height: 70px;
-    }
-
-    a {
-      font-size: 12px;
-      padding: 4px 6px;
-    }
-
-    .logo-container {
-      margin: 0 10px;
+      height: 60px;
     }
 
     .logo {
@@ -394,8 +570,28 @@
     }
 
     .control-icon svg {
-      width: 20px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .hamburger {
+      width: 25px;
       height: 20px;
+    }
+
+    .hamburger span {
+      height: 2px;
+    }
+
+    .mobile-menu {
+      top: 60px;
+      height: calc(100vh - 60px);
+      width: 250px;
+    }
+
+    .mobile-nav-links a {
+      font-size: 16px;
+      padding: 12px 20px;
     }
   }
 </style>
