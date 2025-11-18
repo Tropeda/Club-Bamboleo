@@ -169,4 +169,26 @@
       max-width: 100%;
     }
   }
+
+  @media (max-width: 480px) {
+    .footer {
+      padding: 60px 20px 20px;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+    }
+
+    .footer-section h3 {
+      margin-left: 0;
+    }
+
+    .footer-section ul {
+      margin-left: 0;
+    }
+
+    .social-links {
+      margin-left: 0;
+    }
+  }
 </style>

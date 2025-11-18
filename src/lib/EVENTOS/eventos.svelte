@@ -444,6 +444,24 @@
     border-radius: 5px;
   }
 
+  @media (max-width: 1024px) {
+    .title {
+      font-size: 2rem;
+    }
+    .carousel {
+      width: 280px;
+      height: 450px;
+    }
+    .card {
+      width: 240px;
+      height: 450px;
+    }
+    .nav-button {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
   @media (max-width: 768px) {
     .title {
       font-size: 2rem;
@@ -455,6 +473,42 @@
     .card {
       width: 240px;
       height: 360px;
+    }
+    .nav-button {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .title {
+      font-size: 1.7rem;
+    }
+    .carousel {
+      width: 280px;
+      height: 450px;
+    }
+    .card {
+      width: 240px;
+      height: 450px;
+    }
+    .nav-button {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+    @media (max-width: 320px) {
+    .title {
+      font-size: 1.5rem;
+    }
+    .carousel {
+      width: 280px;
+      height: 450px;
+    }
+    .card {
+      width: 240px;
+      height: 450px;
     }
     .nav-button {
       width: 40px;

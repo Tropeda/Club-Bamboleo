@@ -144,6 +144,14 @@
     text-shadow: 0 0 20px rgba(255, 51, 51, 0.9);
   }
 
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+  }
+
   .play-button {
     width: clamp(70px, 15vw, 110px);
     height: clamp(70px, 15vw, 110px);
@@ -167,6 +175,7 @@
     width: min(90vw, 420px);
     aspect-ratio: 2.6 / 1;
     position: relative;
+    display: flex;
   }
 
   .spotify-player iframe {
@@ -191,131 +200,25 @@
     z-index: 10;
   }
 
-  /* TABLETS */
-  @media (max-width: 1024px) {
-    .hero-text {
-      margin-top: 2rem;
-    }
+  /* Media queries simplificados, sin márgenes locos para centrar */
+  @media (max-width: 768px) {
+    .hero-text { margin-top: 2rem; }
+    .spotify-player { width: 90vw; }
   }
 
-  /* MOBILE NORMAL */
-  @media (max-width: 600px) {
-    .hero-text {
-      margin-top: 1rem;
-    }
-
-    .back-to-top {
-      width: 42px;
-      height: 42px;
-      font-size: 1.4rem;
-      bottom: 1.5rem;
-      right: 1.5rem;
-    }
+  @media (max-width: 425px) {
+    .hero-text { margin-top: 1rem; }
+    .spotify-player { width: 92vw; }
+    .play-button { width: 65px; height: 65px; }
   }
 
-  /* MOBILE S — Pantallas muy pequeñas (<= 360px) */
-  @media (max-width: 360px) {
-    .hero {
-      height: 100dvh; 
-    }
-
-    .hero-text {
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .hero-text :global(.text-pressure) {
-      transform: scale(0.85);
-      transform-origin: center;
-    }
-
-    .subtitle {
-      font-size: clamp(18px, 7vw, 26px);
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px rgba(255, 51, 51, 0.7);
-    }
-
-    .play-button {
-      width: 65px;
-      height: 65px;
-      border-width: 2px;
-    }
-
-    .play-button svg {
-      width: 28px;
-      height: 28px;
-    }
-
-    .spotify-player {
-      width: 92vw;
-      min-height: 110px;
-      aspect-ratio: unset;
-    }
-
-    .back-to-top {
-      width: 38px;
-      height: 38px;
-      bottom: 1rem;
-      right: 1rem;
-      font-size: 1.2rem;
-    }
+  @media (max-width: 375px) {
+    .hero-text { margin-top: 0.5rem; }
+    .spotify-player { width: 95vw; }
   }
 
-  /* Pantallas 320px - Extra pequeñas */
   @media (max-width: 320px) {
-    .hero {
-      height: auto;
-      min-height: 100dvh;
-      padding-top: 1rem;
-      padding-bottom: 2rem;
-      overflow-x: hidden;
-    }
-
-    .hero-content {
-      padding: 0.5rem 0.25rem 1rem;
-      justify-content: flex-start;
-    }
-
-    .hero-text {
-      margin-top: 20rem;
-      padding: 0 0.25rem;
-      line-height: 1.05;
-    }
-
-    .hero-text :global(.text-pressure) {
-      transform: scale(0.68);
-      transform-origin: center;
-    }
-
-    .subtitle {
-      font-size: clamp(15px, 5vw, 20px);
-      line-height: 1.1;
-      letter-spacing: 0.2px;
-      padding: 0 0.5rem;
-    }
-
-    .play-button {
-      width: 56px;
-      height: 56px;
-      border-width: 2px;
-    }
-
-    .play-button svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    .spotify-player {
-      width: 95vw;
-      min-height: 105px;
-    }
-
-    .back-to-top {
-      width: 34px;
-      height: 34px;
-      bottom: 0.8rem;
-      right: 0.8rem;
-      font-size: 1.1rem;
-    }
+    .hero { min-height: 100dvh; }
+    .spotify-player { width: 95vw; }
   }
 </style>

@@ -418,4 +418,23 @@
       font-size: 1.5rem;
     }
   }
+
+  @media (max-width: 480px) {
+    .neon-title {
+      font-size: 2.1rem;
+    }
+
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      margin-top: 20px;
+    }
+  }
+
+
 </style>
